@@ -1,0 +1,65 @@
+1. Problem Statement
+The Data Overload in Financial Analysis Financial analysts and investors are inundated with massive volumes of unstructured data—Annual Reports (10-Ks), Earnings Call Transcripts, and financial news.
+
+Inefficiency: Manually parsing 100+ page PDF documents to find specific metrics (e.g., "Debt-to-Equity Ratio" or "Q3 Revenue") is time-consuming and prone to human error.
+
+Lack of Precision: Generic AI tools often "hallucinate" numbers or fail to distinguish between similar financial terms (e.g., Net Income vs. Operating Income).
+
+Unstructured Nature: Valuable insights are locked in dense text tables and footnotes, making them inaccessible to standard database queries.
+
+2. Solution: FinanceInsight
+An Intelligent Financial Document Assistant FinanceInsight is a dual-engine AI platform designed to bridge the gap between unstructured documents and actionable financial intelligence. It combines the conversational flexibility of Generative AI with the strict precision of specialized Named Entity Recognition.
+
+Interactive RAG Engine: A "Chat with your Doc" interface that uses Retrieval-Augmented Generation to answer complex questions with strict citations from the source text.
+
+Specialized Extraction Engine: A fine-tuned BERT model capable of identifying and extracting specific financial numerals that general models miss.
+
+Smart Caching: A system that remembers previous analyses to eliminate repetitive processing time.
+
+3. Tech Stack
+Frontend & UI: Streamlit (Custom CSS for Glassmorphism/FinTech aesthetic).
+
+Generative AI Core: LangChain orchestration with Google Gemini 2.0 Flash (LLM) and Google GenAI Embeddings.
+
+Vector Database: FAISS (Facebook AI Similarity Search) for local, high-speed context retrieval.
+
+Specialized NER Model: FinBERT (BERT architecture pre-trained on financial text), fine-tuned using Hugging Face Transformers and PyTorch.
+
+Document Processing: PyMuPDF & PyTesseract (OCR for scanned documents).
+
+Dataset: FiNER-139 (Gold standard dataset for Financial Numeral Entity Recognition).
+
+4. Methodology
+Our approach follows a two-pipeline architecture:
+
+A. The Generative Pipeline (RAG)
+
+Ingestion & OCR: Documents (PDF/Docs) are loaded. If text is not selectable, an OCR fallback (Tesseract) activates to read images.
+
+Chunking: Text is split into 1000-character chunks with overlaps to maintain context boundaries.
+
+Vectorization: Chunks are converted into semantic vectors using Google Embeddings and stored in a FAISS index.
+
+Retrieval & Generation: User queries trigger a similarity search; top results are fed to Gemini 2.0 to generate a grounded response.
+
+B. The Extraction Pipeline (Fine-Tuning)
+
+Data Preparation: We utilized the FiNER-139 dataset, containing 1.1M annotated tokens from financial filings.
+
+Label Discovery: Dynamic scanning identified 170 unique financial tags (e.g., Revenue, Amortization, EarningsPerShare).
+
+Token Alignment: Implemented robust sub-word token alignment to ensure complex financial terms (like multi-word metrics) are correctly labeled.
+
+Training: Fine-tuned ProsusAI/finbert for 4 epochs with a learning rate of 5e-5, optimizing for Precision and Recall using the seqeval metric.
+
+5. Impact
+Efficiency: Reduces document analysis time from hours to seconds.
+
+Accuracy: Eliminates AI hallucinations by grounding every answer in retrieved document context.
+
+Granularity: capable of distinguishing between 139+ specific financial entity types, far exceeding standard NER models which only detect generic "Money" or "Date" tags.
+
+User Experience: Provides a seamless, "zero-setup" experience for analysts via an intuitive web interface.
+
+6. Conclusion
+FinanceInsight successfully demonstrates how modern AI can transform financial workflows. By combining the reasoning capabilities of Large Language Models with the precision of domain-specific Fine-Tuning, we have created a tool that is both flexible enough to answer open-ended questions and rigorous enough to extract hard financial data. This project lays the groundwork for automated financial auditing and real-time investment risk analysis.
